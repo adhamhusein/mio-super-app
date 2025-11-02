@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super App - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+</head>
+<body class="dashboard-body">
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+        <div class="navbar-left">
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+            <h1 class="app-name">Super App</h1>
+        </div>
+        <div class="navbar-right">
+            <span class="welcome-text">Welcome, {{ fullname }}!</span>
+            <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="dashboard-main">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <h3 class="menu-title">Features</h3>
+                    <ul class="menu-list">
+                        <li>
+                            <a href="#" class="menu-item" data-feature="timesheet">Timesheet Validation</a>
+                        </li>
+                        <li>
+                            <a href="#" class="menu-item" data-feature="dispatcher">Dispatcher Logsheet</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area" id="contentArea">
+            <div class="feature-content" id="featureContent">
+                <div class="default-content">
+                    <h2>Welcome to Super App</h2>
+                    <p>Select a feature from the menu to get started.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Timesheet Validation Feature Template -->
+    <div id="timesheet-template" style="display: none;">
+        <div class="feature-header">
+            <h2>Timesheet Validation</h2>
+        </div>
+        <div class="feature-body">
+            <div id="timesheet-wizard-container">
+                <!-- Step 1 will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Dispatcher Logsheet Feature Template -->
+    <div id="dispatcher-template" style="display: none;">
+        <div class="feature-header">
+            <h2>Dispatcher Logsheet</h2>
+        </div>
+        <div class="feature-body">
+            <p>Dispatcher Logsheet feature content will be displayed here.</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/timesheet.js') }}"></script>
+</body>
+</html>
