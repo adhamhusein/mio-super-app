@@ -61,7 +61,7 @@ You'll need to insert a test user into the database. Run this SQL query:
 USE SuperAppDB;
 -- Password will be hashed with SHA-256
 -- Example: password 'admin123' hashed
-INSERT INTO users (username, password) 
+INSERT INTO miosphere_users (username, password) 
 VALUES ('admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9');
 ```
 

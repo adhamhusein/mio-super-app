@@ -21,7 +21,7 @@ def create_user(username: str, password: str):
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         
         cursor.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
+            "INSERT INTO miosphere_users (username, password) VALUES (?, ?)",
             (username, hashed_password)
         )
         conn.commit()

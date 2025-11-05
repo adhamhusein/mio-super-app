@@ -72,7 +72,14 @@
         </div>
     </div>
 
+    <div id="historical-panel"></div>
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/timesheet.js') }}"></script>
+    <!-- Timesheet modular files - load in order -->
+    <script src="{{ url_for('static', filename='js/timesheet_core.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/timesheet_utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/timesheet_panel.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/timesheet_step_001.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/timesheet_step_002.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/timesheet_step_003.js') }}"></script>
 </body>
 </html>
