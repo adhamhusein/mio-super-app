@@ -672,6 +672,68 @@ def update_hm():
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
+@app.route('/api/timesheet/validate-data', methods=['POST'])
+def validate_data():
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        data = request.get_json()
+        record_id = data.get('id')
+        opr_nrp = data.get('opr_nrp')
+        hm = data.get('hm')
+        new_hm = data.get('new_hm')
+        opr_shift = data.get('opr_shift')
+        
+        if not record_id:
+            return jsonify({'success': False, 'message': 'Missing ID'}), 400
+        
+        if not opr_nrp:
+            return jsonify({'success': False, 'message': 'Missing opr_nrp'}), 400
+        
+        if new_hm is None:
+            return jsonify({'success': False, 'message': 'Missing new_hm value'}), 400
+        
+        try:
+            new_hm = float(new_hm)
+        except (ValueError, TypeError):
+            return jsonify({'success': False, 'message': 'Invalid HM value'}), 400
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        query = """
+        EXEC dbo.miosphere_dtv_insert_login_update
+            @id = ?,
+            @b_nrp = ?,
+            @a_nrp = ?,
+            @b_hm = ?,
+            @a_hm = ?,
+            @b_shift = ?,
+            @a_shift = ?,
+            @remark = 'valid',
+            @updated_by = 'dispatcher'
+        """
+        cursor.execute(query, (
+            record_id,
+            opr_nrp,
+            opr_nrp,
+            hm,
+            new_hm,
+            opr_shift,
+            opr_shift
+        ))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'Data validated successfully'})
+    except Exception as e:
+        print(f"Error validating data: {e}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
 @app.route('/api/timesheet/update-next-hm', methods=['POST'])
 def update_next_hm():
     if 'user_id' not in session:

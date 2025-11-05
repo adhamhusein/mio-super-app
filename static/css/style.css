@@ -99,6 +99,18 @@
     max-width: 80px;
     text-align: center;
 }
+
+.data-valid-btn {
+    background: #4caf50;
+    color: #fff;
+    border: 1px solid #45a049;
+    font-weight: 500;
+}
+
+.data-valid-btn:hover {
+    background: #45a049;
+    border-color: #3d8b40;
+}
 .realtime-container {
     padding: 0;
     /* max-height: 70vh; */

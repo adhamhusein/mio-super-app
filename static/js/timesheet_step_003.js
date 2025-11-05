@@ -50,7 +50,8 @@ function renderStep3() {
         { key: 'HM_LONCAT', label: 'HM LONCAT' },
         { key: 'reporttime', label: 'Login Time' },
         { key: 'next_reporttime', label: 'Logout Time' },
-        { key: 'problem', label: 'Problem' }
+        { key: 'problem', label: 'Problem' },
+        { key: 'data_valid', label: 'Data Valid' }
     ];
 
     // Helper function to get value from row (case-insensitive key lookup)
@@ -203,6 +204,14 @@ function renderStep3() {
                     } else {
                         txt = '';
                     }
+                } else if (col.key === 'data_valid') {
+                    // Data Valid column - render as clickable button
+                    const idVal = getVal(r, 'id');
+                    const opr_nrp = getVal(r, 'opr_nrp');
+                    const hm = getVal(r, 'hm');
+                    const opr_shift = getVal(r, 'opr_shift');
+                    
+                    txt = `<button class="id-btn data-valid-btn" onclick="validateData(${idx})" title="Click to validate data">Data OK</button>`;
                 } else {
                     // Default: display value as-is
                     const v = getVal(r, col.key);
@@ -1187,6 +1196,56 @@ async function executeValidationQuery(query) {
     throw new Error('Query execution not yet implemented');
 }
 
+// Validate data - execute validation query immediately without showing card
+function validateData(rowIndex) {
+    // Get row data
+    const rows = timesheetState.step3 || [];
+    if (rowIndex < 0 || rowIndex >= rows.length) {
+        alert('Invalid row data');
+        return;
+    }
+    
+    const row = rows[rowIndex];
+    
+    // Extract required parameters from row
+    const record_id = getVal(row, 'id');
+    const opr_nrp = getVal(row, 'opr_nrp');
+    const hm = getVal(row, 'hm');
+    const opr_shift = getVal(row, 'opr_shift');
+    
+    if (!record_id || !opr_nrp) {
+        alert('Cannot validate: missing required data');
+        return;
+    }
+    
+    // Validate data via API (new_hm = hm, remark = 'valid')
+    fetch('/api/timesheet/validate-data', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            id: record_id,
+            opr_nrp: opr_nrp,
+            hm: hm,
+            new_hm: hm,  // Same as hm for validation
+            opr_shift: opr_shift
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            // Show success notification
+            showNotification('Data validated successfully!', 'success');
+            // Reload step 3 to refresh data
+            loadStep3();
+        } else {
+            alert('Error validating data: ' + (data.message || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        alert('Error validating data: ' + error.message);
+    });
+}
+
 // Make functions globally accessible
 window.showShiftUpdateForm = showShiftUpdateForm;
 window.closeShiftUpdateForm = closeShiftUpdateForm;
@@ -1198,4 +1257,5 @@ window.showNextHmUpdateForm = showNextHmUpdateForm;
 window.closeNextHmUpdateForm = closeNextHmUpdateForm;
 window.showNotification = showNotification;
 window.startAutoValidation = startAutoValidation;
+window.validateData = validateData;
 
